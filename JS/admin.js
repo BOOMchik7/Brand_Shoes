@@ -6,7 +6,12 @@ const adminForm = document.getElementById("adminProductForm");
 const adminPhoto = document.getElementById("adminPhoto");
 const photoPreview = document.getElementById("photoPreview");
 const productList = document.getElementById("adminProductList");
-let selectedPhoto = "";
+let selectedPhotos = [];
+adminPhoto.multiple = true;
+adminPhoto.accept = "image/*";
+const previewStrip = document.createElement("div");
+previewStrip.className = "admin-photo-previews";
+photoPreview.after(previewStrip);
 const categorySelect = document.getElementById("adminCategory");
 const sizePicker = document.createElement("fieldset");
 sizePicker.className = "size-picker";
@@ -72,21 +77,22 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   loginForm.reset();
 });
 
-adminPhoto.addEventListener("change", () => {
-  const [file] = adminPhoto.files;
-  if (!file || !file.type.startsWith("image/")) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    selectedPhoto = reader.result;
-    photoPreview.src = selectedPhoto;
-    photoPreview.classList.remove("hidden");
-  };
-  reader.readAsDataURL(file);
+adminPhoto.addEventListener("change", async () => {
+  const files = [...adminPhoto.files].filter(file => file.type.startsWith("image/")).slice(0, 5);
+  if (!files.length) return;
+  selectedPhotos = await Promise.all(files.map(file => new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  })));
+  photoPreview.src = selectedPhotos[0];
+  photoPreview.classList.remove("hidden");
+  previewStrip.innerHTML = selectedPhotos.map((photo, index) => `<img src="${photo}" alt="Фото ${index + 1}">`).join("");
 });
 
 adminForm.addEventListener("submit", event => {
   event.preventDefault();
-  if (!selectedPhoto) return;
+  if (!selectedPhotos.length) { alert("Додайте хоча б одне фото."); return; }
   const sizes = [...document.querySelectorAll('input[name="productSize"]:checked')].map(input => input.value);
   if (!sizes.length) { alert("Виберіть хоча б один розмір."); return; }
   const products = getProducts();
@@ -97,15 +103,17 @@ adminForm.addEventListener("submit", event => {
     gender: document.getElementById("adminGender").value,
     sizes,
     price: Number(document.getElementById("adminPrice").value),
-    image: selectedPhoto,
+    image: selectedPhotos[0],
+    photos: selectedPhotos,
     badge: "Новинка",
     description: document.getElementById("adminDescription").value.trim(),
     isCustom: true
   });
   saveProducts(products);
   adminForm.reset();
-  selectedPhoto = "";
+  selectedPhotos = [];
   photoPreview.classList.add("hidden");
+  previewStrip.innerHTML = "";
   renderSizeOptions();
   renderProducts();
 });
