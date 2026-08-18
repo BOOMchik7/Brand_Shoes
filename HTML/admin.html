@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Панель керування товарами">
+  <title>Brand_Shoes — Адмін-панель</title>
+  <link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body class="admin-page">
+  <header class="header">
+    <div class="container nav">
+      <a href="index.html" class="logo">Brand_Shoes<span>.</span></a>
+      <a class="cart-btn" href="index.html">← До магазину</a>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container admin-container">
+      <section class="admin-login" id="adminLogin">
+        <p class="eyebrow">ЗАХИЩЕНИЙ ВХІД</p>
+        <h1>Адмін-панель</h1>
+        <p>Уведіть код доступу, щоб керувати товарами.</p>
+        <form id="loginForm" class="admin-form">
+          <label>Код доступу<input id="adminCode" type="password" required autocomplete="current-password"></label>
+          <button class="primary-btn full" type="submit">Увійти</button>
+          <p class="form-error hidden" id="loginError">Неправильний код доступу.</p>
+        </form>
+      </section>
+
+      <section class="admin-dashboard hidden" id="adminDashboard">
+        <div class="section-heading">
+          <div><p class="eyebrow">КЕРУВАННЯ МАГАЗИНОМ</p><h1>Товари</h1></div>
+          <button class="reset-filters" id="logoutBtn" type="button">Вийти</button>
+        </div>
+        <div class="admin-grid">
+          <form id="adminProductForm" class="admin-form admin-product-form">
+            <h3>Новий товар</h3>
+            <label>Назва товару<input id="adminName" type="text" required></label>
+            <div class="admin-form-row">
+              <label>Категорія<select id="adminCategory"><option>Одяг</option><option>Взуття</option><option>Аксесуари</option></select></label>
+              <label>Для кого<select id="adminGender"><option value="female">Жіноче</option><option value="male">Чоловіче</option><option value="unisex">Унісекс</option></select></label>
+            </div>
+            <label>Ціна, грн<input id="adminPrice" type="number" min="0" required></label>
+            <label>Фото товару<input id="adminPhoto" type="file" accept="image/*" required></label>
+            <img id="photoPreview" class="photo-preview hidden" alt="Попередній перегляд фото">
+            <label>Опис товару<textarea id="adminDescription" rows="4" required placeholder="Напишіть короткий опис товару"></textarea></label>
+            <button class="primary-btn full" type="submit">Додати товар</button>
+          </form>
+          <div>
+            <h3 class="admin-list-title">Додані товари</h3>
+            <div class="admin-product-list" id="adminProductList"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="../JS/admin.js"></script>
+</body>
+</html>
