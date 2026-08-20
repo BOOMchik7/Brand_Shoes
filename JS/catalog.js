@@ -87,21 +87,112 @@ overlay.addEventListener("click", closeCart);
 document.getElementById("checkoutBtn").addEventListener("click", openCheckout);
 document.getElementById("closeCheckout").addEventListener("click", closeCheckout);
 document.getElementById("checkoutModal").addEventListener("click", event => { if (event.target === document.getElementById("checkoutModal")) closeCheckout(); });
-document.getElementById("checkoutForm").addEventListener("submit", event => {
+
+// ⚙️ FORMSPREE ОБРОБКА ФОРМИ
+const FORMSPREE_URL = "https://formspree.io/f/mdenyvwe";
+
+document.getElementById("checkoutForm").addEventListener("submit", async event => {
   event.preventDefault();
-  const orders = JSON.parse(localStorage.getItem("modaOrders")) || [];
-  orders.unshift({
-    name: document.getElementById("customerName").value.trim(),
-    phone: document.getElementById("customerPhone").value.trim(),
-    comment: document.getElementById("customerComment").value.trim(),
-    items: cart,
-    createdAt: new Date().toISOString()
-  });
-  localStorage.setItem("modaOrders", JSON.stringify(orders));
-  cart = []; saveCart(); renderCart();
-  document.getElementById("checkoutForm").classList.add("hidden");
-  document.getElementById("successMessage").classList.remove("hidden");
-  setTimeout(() => { closeCheckout(); document.getElementById("checkoutForm").reset(); document.getElementById("checkoutForm").classList.remove("hidden"); document.getElementById("successMessage").classList.add("hidden"); }, 3000);
+  const submitBtn = event.target.querySelector("button[type='submit']");
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "📧 Надсилаємо...";
+  
+  try {
+    // Форматуємо дані замовлення
+    const itemsList = cart.map(item => {
+      const product = products.find(p => p.id === item.id);
+      return `${product.name} (${item.quantity}x) - ${formatPrice(product.price * item.quantity)}`;
+    }).join("\n");
+    
+    const cartTotal = cart.reduce((total, item) => {
+      const product = products.find(p => p.id === item.id);
+      return total + product.price * item.quantity;
+    }, 0);
+    
+    // Збираємо дані форми
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const viber = document.getElementById("customerViber").value.trim();
+    const telegram = document.getElementById("customerTelegram").value.trim();
+    const comment = document.getElementById("customerComment").value.trim();
+    
+    // Формуємо текст повідомлення для email
+    const message = `
+📦 НОВЕ ЗАМОВЛЕННЯ НА OUTFO
+
+👤 Клієнт: ${name}
+📞 Телефон: ${phone}
+💬 Viber: ${viber || "не вказаний"}
+✈️ Telegram: ${telegram || "не вказаний"}
+
+📦 ТОВАРИ:
+${itemsList}
+
+💰 Разом: ${formatPrice(cartTotal)}
+
+💭 Примітка: ${comment || "немає"}
+    `.trim();
+    
+    // Надсилаємо на Formspree
+    const response = await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        phone,
+        viber,
+        telegram,
+        comment,
+        items_list: itemsList,
+        cart_total: formatPrice(cartTotal),
+        message
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      console.log("✅ Замовлення успішно надіслано!");
+      submitBtn.textContent = "✅ Надіслано!";
+    } else {
+      console.warn("⚠️ Formspree повернув помилку:", response.status);
+      submitBtn.textContent = originalText;
+      alert("⚠️ Помилка при надсиланні. Спробуйте ще раз.");
+      return;
+    }
+    
+    // Збереження в localStorage
+    const orders = JSON.parse(localStorage.getItem("modaOrders")) || [];
+    orders.unshift({
+      name, phone, viber, telegram, comment,
+      items: cart,
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem("modaOrders", JSON.stringify(orders));
+    
+    // Очищення кошика
+    cart = []; saveCart(); renderCart();
+    
+    // Показ успіху
+    document.getElementById("checkoutForm").classList.add("hidden");
+    document.getElementById("successMessage").classList.remove("hidden");
+    setTimeout(() => { 
+      closeCheckout(); 
+      document.getElementById("checkoutForm").reset(); 
+      document.getElementById("checkoutForm").classList.remove("hidden"); 
+      document.getElementById("successMessage").classList.add("hidden"); 
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }, 3000);
+    
+  } catch (error) {
+    console.error("❌ Помилка при обробці замовлення:", error);
+    alert("❌ Помилка: " + error.message);
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  }
 });
 
 renderSizeFilters();
