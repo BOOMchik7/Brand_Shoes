@@ -25,6 +25,22 @@ function renderSizeOptions() {
 categorySelect.addEventListener("change", renderSizeOptions);
 renderSizeOptions();
 
+const sizeStockPanel = document.getElementById("sizeStockPanel");
+function renderSizeStockPanel() {
+  const sizes = sizeSets[categorySelect.selectedIndex] || sizeSets[2];
+  sizeStockPanel.innerHTML = sizes.map(size => `
+    <label style="margin-bottom: 8px;">
+      ${size}
+      <input type="number" class="size-stock-input" data-size="${size}" min="0" value="5" required>
+    </label>
+  `).join("");
+}
+categorySelect.addEventListener("change", () => {
+  renderSizeOptions();
+  renderSizeStockPanel();
+});
+renderSizeStockPanel();
+
 function getProducts() {
   return JSON.parse(localStorage.getItem("modaProducts")) || [];
 }
@@ -49,7 +65,7 @@ function renderProducts() {
   productList.innerHTML = products.map(product => `
     <article class="admin-product-item">
       <img src="${product.image}" alt="${product.name}">
-      <div><h3>${product.name}</h3><p>${new Intl.NumberFormat("uk-UA").format(product.price)} грн · ${product.description}</p></div>
+      <div><h3>${product.name}</h3><p>${new Intl.NumberFormat("uk-UA").format(product.price)} грн · ${product.description}</p><p style="font-size:12px;color:#666;">📦 ${Object.entries(product.sizeStock || {}).map(([size, qty]) => `${size}: ${qty}`).join(" | ") || "не вказано"}</p></div>
       <button class="remove-item" type="button" onclick="deleteProduct(${product.id})" aria-label="Видалити товар">×</button>
     </article>
   `).join("");
@@ -103,6 +119,7 @@ adminForm.addEventListener("submit", event => {
     gender: document.getElementById("adminGender").value,
     sizes,
     price: Number(document.getElementById("adminPrice").value),
+    sizeStock: Object.fromEntries([...document.querySelectorAll('.size-stock-input')].map(input => [input.dataset.size, Number(input.value)])),
     image: selectedPhotos[0],
     photos: selectedPhotos,
     badge: "Новинка",
