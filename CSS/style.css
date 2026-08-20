@@ -170,9 +170,98 @@ h2 {
 }
 
 .mobile-menu {
-  display: none;
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 120;
+  width: min(340px, 88vw);
+  height: 100dvh;
+  padding: 96px 22px 28px;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--white);
+  box-shadow: -12px 0 35px rgba(0,0,0,.12);
+  transform: translateX(105%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .28s ease, visibility .28s ease;
+  overflow-y: auto;
 }
 
+.mobile-menu.open {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 16px 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.mobile-menu a:hover,
+.mobile-menu a:focus {
+  background: var(--gray-100);
+  color: var(--accent);
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(0,0,0,.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .28s ease, visibility .28s ease;
+}
+
+.menu-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.menu-btn {
+  position: relative;
+  z-index: 130;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.menu-btn span,
+.menu-btn::before,
+.menu-btn::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition: transform .22s ease, opacity .22s ease;
+}
+
+.menu-btn span { top: 21px; }
+.menu-btn::before { top: 14px; }
+.menu-btn::after { top: 28px; }
+
+.menu-btn.is-open::before { transform: translateY(7px) rotate(45deg); }
+.menu-btn.is-open span { opacity: 0; }
+.menu-btn.is-open::after { transform: translateY(-7px) rotate(-45deg); }
+
+@media (min-width: 761px) {
+  .mobile-menu,
+  .menu-backdrop {
+    display: none !important;
+  }
+}
 .hero {
   min-height: 680px;
   display: flex;
@@ -1063,22 +1152,6 @@ h2 {
     display: block;
   }
 
-  .mobile-menu {
-    padding: 0 14px 16px;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .mobile-menu.open {
-    display: flex;
-  }
-
-  .mobile-menu a {
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-  }
-
   .hero {
     min-height: 600px;
   }
@@ -1191,3 +1264,5 @@ h2 {
     padding: 28px 20px;
   }
 }
+
+body.menu-open { overflow: hidden; }
