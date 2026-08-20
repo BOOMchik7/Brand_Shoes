@@ -166,8 +166,6 @@ document.getElementById("checkoutForm").addEventListener("submit", async event =
     // Збираємо дані форми
     const name = document.getElementById("customerName").value.trim();
     const phone = document.getElementById("customerPhone").value.trim();
-    const viber = document.getElementById("customerViber").value.trim();
-    const telegram = document.getElementById("customerTelegram").value.trim();
     const comment = document.getElementById("customerComment").value.trim();
     
     // Формуємо текст повідомлення для email
@@ -176,8 +174,6 @@ document.getElementById("checkoutForm").addEventListener("submit", async event =
 
 👤 Клієнт: ${name}
 📞 Телефон: ${phone}
-💬 Viber: ${viber || "не вказаний"}
-✈️ Telegram: ${telegram || "не вказаний"}
 
 📦 ТОВАРИ:
 ${itemsList}
@@ -193,8 +189,6 @@ ${itemsList}
       body: JSON.stringify({
         name,
         phone,
-        viber,
-        telegram,
         comment,
         items_list: itemsList,
         cart_total: formatPrice(cartTotal),
@@ -219,7 +213,7 @@ ${itemsList}
     // Збереження в localStorage
     const orders = JSON.parse(localStorage.getItem("modaOrders")) || [];
     orders.unshift({
-      name, phone, viber, telegram, comment,
+      name, phone, comment,
       items: cart,
       createdAt: new Date().toISOString()
     });
