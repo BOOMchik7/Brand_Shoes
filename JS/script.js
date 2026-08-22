@@ -1,113 +1,4 @@
-let products = [
-  {
-    id: 1,
-    name: "Базова футболка Premium",
-    category: "Одяг",
-    price: 899,
-    emoji: "👕",
-    badge: "Хіт",
-    description: "Універсальна футболка прямого крою з м'якої тканини. Підійде для повсякденних образів."
-  },
-  {
-    id: 2,
-    name: "Куртка Urban",
-    category: "Одяг",
-    price: 2499,
-    emoji: "🧥",
-    badge: "Новинка",
-    description: "Легка міська куртка для прохолодної погоди. Зручний крій та мінімалістичний дизайн."
-  },
-  {
-    id: 3,
-    name: "Джинси Classic",
-    category: "Одяг",
-    price: 1799,
-    emoji: "👖",
-    badge: "",
-    description: "Класичні джинси з комфортною посадкою. Легко поєднуються з повсякденним одягом."
-  },
-  {
-    id: 4,
-    name: "Худі Basic",
-    category: "Одяг",
-    price: 1599,
-    emoji: "🧢",
-    badge: "Хіт",
-    description: "Тепле худі в базовому стилі. М'який матеріал та зручний капюшон."
-  },
-  {
-    id: 5,
-    name: "Кросівки Street",
-    category: "Взуття",
-    price: 2899,
-    emoji: "👟",
-    badge: "Новинка",
-    description: "Повсякденні кросівки з легкою підошвою. Для міста, прогулянок та активного дня."
-  },
-  {
-    id: 6,
-    name: "Кеди Classic",
-    category: "Взуття",
-    price: 1899,
-    emoji: "👟",
-    badge: "",
-    description: "Лаконічні кеди на кожен день. Класичний дизайн, який не виходить з моди."
-  },
-  {
-    id: 7,
-    name: "Шкіряний ремінь",
-    category: "Аксесуари",
-    price: 799,
-    emoji: "🪢",
-    badge: "",
-    description: "Класичний ремінь, який доповнить як джинси, так і більш формальний образ."
-  },
-  {
-    id: 8,
-    name: "Міська сумка",
-    category: "Аксесуари",
-    price: 1299,
-    emoji: "👜",
-    badge: "Хіт",
-    description: "Практична сумка для міста з достатнім місцем для щоденних речей."
-  },
-  {
-    id: 9,
-    name: "Кепка Logo",
-    category: "Аксесуари",
-    price: 649,
-    emoji: "🧢",
-    badge: "",
-    description: "Базова кепка з регульованим розміром. Простий аксесуар для завершення образу."
-  },
-  {
-    id: 10,
-    name: "Світшот Comfort",
-    category: "Одяг",
-    price: 1399,
-    emoji: "👚",
-    badge: "",
-    description: "Комфортний світшот вільного крою для прохолодних вечорів та щоденних образів."
-  },
-  {
-    id: 11,
-    name: "Черевики City",
-    category: "Взуття",
-    price: 3299,
-    emoji: "🥾",
-    badge: "Новинка",
-    description: "Міцні міські черевики для осіннього та зимового сезону."
-  },
-  {
-    id: 12,
-    name: "Гаманець Compact",
-    category: "Аксесуари",
-    price: 999,
-    emoji: "👛",
-    badge: "",
-    description: "Компактний гаманець для карток, готівки та щоденного використання."
-  }
-];
+let products = [];
 
 const savedProducts = JSON.parse(localStorage.getItem("modaProducts"));
 if (Array.isArray(savedProducts)) {
@@ -147,6 +38,29 @@ function productImage(product, modal = false) {
     return `<img src="${product.image}" alt="${product.name}">`;
   }
   return `<span>${product.emoji}</span>`;
+}
+
+function homeProductGallery(product) {
+  const photos = product.photos && product.photos.length ? product.photos : product.image ? [product.image] : [];
+  if (!photos.length) return `<div class="modal-product-image">${productImage(product, true)}</div>`;
+  const controls = photos.length > 1 ? `<button class="gallery-arrow gallery-prev" type="button" onclick="changeHomeProductPhoto(${product.id}, -1)" aria-label="Попереднє фото">←</button><button class="gallery-arrow gallery-next" type="button" onclick="changeHomeProductPhoto(${product.id}, 1)" aria-label="Наступне фото">→</button>` : "";
+  const thumbnails = photos.length > 1 ? `<div class="gallery-thumbnails">${photos.map((photo, index) => `<button class="gallery-thumb${index === 0 ? " active" : ""}" type="button" onclick="selectHomeProductPhoto(${product.id}, ${index})" aria-label="Фото ${index + 1}"><img src="${photo}" alt=""></button>`).join("")}</div>` : "";
+  return `<div class="product-gallery"><div class="modal-product-image"><img id="homeGalleryMainImage" src="${photos[0]}" alt="${product.name}">${controls}</div>${thumbnails}</div>`;
+}
+
+function selectHomeProductPhoto(productId, index) {
+  const product = products.find(item => item.id === productId);
+  const photos = product && product.photos && product.photos.length ? product.photos : product && product.image ? [product.image] : [];
+  if (!photos[index]) return;
+  document.getElementById("homeGalleryMainImage").src = photos[index];
+  document.querySelectorAll(".gallery-thumb").forEach((thumb, thumbIndex) => thumb.classList.toggle("active", thumbIndex === index));
+}
+
+function changeHomeProductPhoto(productId, direction) {
+  const product = products.find(item => item.id === productId);
+  const photos = product && product.photos && product.photos.length ? product.photos : product && product.image ? [product.image] : [];
+  const activeThumb = [...document.querySelectorAll(".gallery-thumb")].findIndex(thumb => thumb.classList.contains("active"));
+  selectHomeProductPhoto(productId, (activeThumb + direction + photos.length) % photos.length);
 }
 
 function renderProducts() {
@@ -312,7 +226,7 @@ function openProduct(id) {
 
   modalContent.innerHTML = `
     <div class="modal-product">
-      <div class="modal-product-image">${productImage(product, true)}</div>
+      ${homeProductGallery(product)}
       <div class="modal-product-info">
         <span class="product-category">${product.category}</span>
         <h2>${product.name}</h2>

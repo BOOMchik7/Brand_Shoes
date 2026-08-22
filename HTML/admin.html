@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <title>OUTFO — Адмін-панель</title>
   <link rel="stylesheet" href="../CSS/style.css">
 </head>
+
 <body class="admin-page">
   <header class="header">
     <div class="container nav">
@@ -30,7 +32,10 @@
 
       <section class="admin-dashboard hidden" id="adminDashboard">
         <div class="section-heading">
-          <div><p class="eyebrow">КЕРУВАННЯ МАГАЗИНОМ</p><h1>Товари</h1></div>
+          <div>
+            <p class="eyebrow">КЕРУВАННЯ МАГАЗИНОМ</p>
+            <h1>Товари</h1>
+          </div>
           <button class="reset-filters" id="logoutBtn" type="button">Вийти</button>
         </div>
         <div class="admin-grid">
@@ -38,24 +43,86 @@
             <h3>Новий товар</h3>
             <label>Назва товару<input id="adminName" type="text" required></label>
             <div class="admin-form-row">
-              <label>Категорія<select id="adminCategory"><option>Одяг</option><option>Взуття</option><option>Аксесуари</option></select></label>
-              <label>Для кого<select id="adminGender"><option value="female">Жіноче</option><option value="male">Чоловіче</option><option value="unisex">Унісекс</option></select></label>
+              <label>Категорія<select id="adminCategory">
+                  <optgroup label="Одяг">
+                    <option value="Футболки">Футболки</option>
+                    <option value="Сорочки">Сорочки</option>
+                    <option value="Світшоти та худі">Світшоти та худі</option>
+                    <option value="Светри та кардигани">Светри та кардигани</option>
+                    <option value="Куртки та вітровки">Куртки та вітровки</option>
+                    <option value="Пальта та плащі">Пальта та плащі</option>
+                    <option value="Джинси">Джинси</option>
+                    <option value="Штани">Штани</option>
+                    <option value="Шорти">Шорти</option>
+                    <option value="Спідниці">Спідниці</option>
+                    <option value="Сукні">Сукні</option>
+                    <option value="Комбінезони">Комбінезони</option>
+                    <option value="Спортивний одяг">Спортивний одяг</option>
+                    <option value="Нижня білизна">Нижня білизна</option>
+                    <option value="Домашній одяг">Домашній одяг</option>
+                    <option value="Купальники">Купальники</option>
+                  </optgroup>
+                  <optgroup label="Взуття">
+                    <option value="Кросівки">Кросівки</option>
+                    <option value="Кеди">Кеди</option>
+                    <option value="Черевики та чоботи">Черевики та чоботи</option>
+                    <option value="Туфлі та лофери">Туфлі та лофери</option>
+                    <option value="Сандалі та босоніжки">Сандалі та босоніжки</option>
+                    <option value="Шльопанці та капці">Шльопанці та капці</option>
+                  </optgroup>
+                  <optgroup label="Аксесуари">
+                    <option value="Сумки та рюкзаки">Сумки та рюкзаки</option>
+                    <option value="Гаманці">Гаманці</option>
+                    <option value="Ремені">Ремені</option>
+                    <option value="Головні убори">Головні убори</option>
+                    <option value="Шарфи та рукавички">Шарфи та рукавички</option>
+                    <option value="Шкарпетки">Шкарпетки</option>
+                    <option value="Окуляри">Окуляри</option>
+                    <option value="Прикраси">Прикраси</option>
+                    <option value="Годинники">Годинники</option>
+                  </optgroup>
+                </select></label>
+              <label>Для кого<select id="adminGender">
+                  <option value="female">Жіноче</option>
+                  <option value="male">Чоловіче</option>
+                  <option value="unisex">Унісекс</option>
+                </select></label>
+              <label>Сезон<select id="adminSeason">
+                  <option value="summer">Літній</option>
+                  <option value="demi">Демісезонний</option>
+                  <option value="winter">Зимовий</option>
+                  <option value="all-season">Всесезонний</option>
+                </select></label>
             </div>
             <label>Ціна, грн<input id="adminPrice" type="number" min="0" required></label>
             <div id="sizeStockPanel" class="admin-form-row" style="flex-direction: column;"></div>
-            <label>Фото товару<input id="adminPhoto" type="file" accept="image/*" required></label>
+            <label>Фото товару<input id="adminPhoto" type="file" accept="image/*" multiple></label>
             <img id="photoPreview" class="photo-preview hidden" alt="Попередній перегляд фото">
-            <label>Опис товару<textarea id="adminDescription" rows="4" required placeholder="Напишіть короткий опис товару"></textarea></label>
+
+            <label>Опис товару<textarea id="adminDescription" rows="4" required
+                placeholder="Напишіть короткий опис товару"></textarea></label>
             <button class="primary-btn full" type="submit">Додати товар</button>
           </form>
-          <div>
-            <h3 class="admin-list-title">Додані товари</h3>
+          <div class="admin-products-panel">
+
+            <div class="admin-products-header">
+              <h3 class="admin-list-title">Додані товари</h3>
+              <span id="adminProductCount">0 товарів</span>
+            </div>
+
+            <div class="admin-product-search">
+              <input type="search" id="adminProductSearch" placeholder="🔎 Пошук товару за назвою..."
+                autocomplete="off">
+            </div>
+
             <div class="admin-product-list" id="adminProductList"></div>
+
           </div>
         </div>
       </section>
     </div>
   </main>
-  <script src="../JS/admin.js"></script>
+  <script type="module" src="../JS/admin.js"></script>
 </body>
+
 </html>
