@@ -121,7 +121,12 @@ function renderPhotoPreviews() {
 
 window.setActivePhoto = function(index) {
 
-  activePhotoIndex = index;
+  const photo = selectedPhotos[index];
+
+  selectedPhotos.splice(index, 1);
+  selectedPhotos.unshift(photo);
+
+  activePhotoIndex = 0;
 
   renderPhotoPreviews();
 };
@@ -171,6 +176,7 @@ document
 
 const clothingCategories = new Set([
   "Футболки",
+  "Комлекти",
   "Сорочки",
   "Світшоти та худі",
   "Светри та кардигани",
