@@ -179,10 +179,9 @@ const clothingCategories = new Set([
   "Комплекти",
   "Сорочки",
   "Світшоти та худі",
-  "Светри та кардигани",
+  "Светри та кофти",
   "Куртки та вітровки",
   "Пальта та плащі",
-  "Джинси",
   "Штани",
   "Шорти",
   "Спідниці",
@@ -205,6 +204,11 @@ const footwearCategories = new Set([
 ]);
 
 
+const jeansCategories = new Set([
+  "Джинси"
+]);
+
+
 const sizeSets = {
 
   clothing: [
@@ -216,6 +220,77 @@ const sizeSets = {
     "XL",
     "XXL",
     "XXXL"
+  ],
+
+  jeans: [
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "36",
+    "38",
+    "26S",
+    "26R",
+    "26L",
+    "27S",
+    "27R",
+    "27L",
+    "28S",
+    "28R",
+    "28L",
+    "29S",
+    "29R",
+    "29L",
+    "30S",
+    "30R",
+    "30L",
+    "31S",
+    "31R",
+    "31L",
+    "32S",
+    "32R",
+    "32L",
+    "33S",
+    "33R",
+    "33L",
+    "34S",
+    "34R",
+    "34L",
+    "36S",
+    "36R",
+    "36L",
+    "38S",
+    "38R",
+    "38L",
+    "26/30",
+    "26/32",
+    "27/30",
+    "27/32",
+    "28/30",
+    "28/32",
+    "29/30",
+    "29/32",
+    "30/30",
+    "30/32",
+    "30/34",
+    "31/32",
+    "31/34",
+    "32/30",
+    "32/32",
+    "32/34",
+    "33/32",
+    "33/34",
+    "34/32",
+    "34/34",
+    "36/32",
+    "36/34",
+    "38/32",
+    "38/34"
   ],
 
   footwear: [
@@ -242,6 +317,10 @@ const sizeSets = {
 function getSizesForCategory() {
 
   const category = categorySelect.value;
+
+  if (jeansCategories.has(category)) {
+    return sizeSets.jeans;
+  }
 
   if (clothingCategories.has(category)) {
     return sizeSets.clothing;
@@ -272,6 +351,18 @@ function renderSizeOptions() {
       </label>
 
     `).join("");
+
+
+  document
+    .querySelectorAll('input[name="productSize"]')
+    .forEach(checkbox => {
+
+      checkbox.addEventListener(
+        "change",
+        renderSizeStockPanel
+      );
+
+    });
 }
 
 
@@ -281,10 +372,39 @@ const sizeStockPanel =
 
 function renderSizeStockPanel() {
 
-  const sizes = getSizesForCategory();
+  const selectedSizes =
+    [
+      ...document.querySelectorAll(
+        'input[name="productSize"]:checked'
+      )
+    ].map(
+      input => input.value
+    );
+
+
+  const previousValues = {};
+
+  sizeStockPanel
+    .querySelectorAll(".size-stock-input")
+    .forEach(input => {
+
+      previousValues[input.dataset.size] =
+        input.value;
+
+    });
+
+
+  if (!selectedSizes.length) {
+
+    sizeStockPanel.innerHTML =
+      '<p class="admin-empty">Спочатку виберіть розміри вище.</p>';
+
+    return;
+  }
+
 
   sizeStockPanel.innerHTML =
-    sizes.map(size => `
+    selectedSizes.map(size => `
 
       <label style="margin-bottom:8px;">
 
@@ -295,7 +415,7 @@ function renderSizeStockPanel() {
           class="size-stock-input"
           data-size="${size}"
           min="0"
-          value="0"
+          value="${previousValues[size] ?? 0}"
           required
         >
 
