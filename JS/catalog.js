@@ -99,6 +99,20 @@ const grid =
 const empty =
   document.getElementById("catalogEmpty");
 
+const pagination =
+  document.createElement("div");
+
+pagination.className = "catalog-pagination";
+pagination.id = "catalogPagination";
+
+document
+  .querySelector(".catalog-products")
+  .append(pagination);
+
+const PRODUCTS_PER_PAGE = 24;
+
+let currentPage = 1;
+
 const modal =
   document.getElementById("catalogModal");
 
@@ -438,7 +452,7 @@ window.changeProductPhoto =
    CATALOG
 ========================= */
 
-function renderCatalog() {
+function renderCatalog(resetPage = true) {
 
   const query =
     document
@@ -554,8 +568,44 @@ function renderCatalog() {
     });
 
 
+  if (resetPage) {
+    currentPage = 1;
+  }
+
+
+  renderProductGrid(filtered);
+
+}
+
+
+function renderProductGrid(filtered) {
+
+  const totalPages =
+    Math.max(
+      1,
+      Math.ceil(
+        filtered.length / PRODUCTS_PER_PAGE
+      )
+    );
+
+
+  if (currentPage > totalPages) {
+    currentPage = totalPages;
+  }
+
+
+  const startIndex =
+    (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+  const pageItems =
+    filtered.slice(
+      startIndex,
+      startIndex + PRODUCTS_PER_PAGE
+    );
+
+
   grid.innerHTML =
-    filtered.map(product => `
+    pageItems.map(product => `
 
       <article
         class="product-card product-card-clickable"
@@ -596,7 +646,101 @@ function renderCatalog() {
     filtered.length > 0
   );
 
+
+  renderPagination(totalPages);
+
 }
+
+
+function renderPagination(totalPages) {
+
+  if (totalPages <= 1) {
+
+    pagination.innerHTML = "";
+
+    return;
+  }
+
+
+  const pageButtons = [];
+
+  for (
+    let page = 1;
+    page <= totalPages;
+    page++
+  ) {
+
+    pageButtons.push(`
+      <button
+        type="button"
+        class="pagination-page${
+          page === currentPage
+            ? " is-active"
+            : ""
+        }"
+        data-page="${page}"
+      >
+        ${page}
+      </button>
+    `);
+
+  }
+
+
+  pagination.innerHTML = `
+
+    <button
+      type="button"
+      class="pagination-nav"
+      data-page="${currentPage - 1}"
+      ${currentPage === 1 ? "disabled" : ""}
+      aria-label="Попередня сторінка"
+    >
+      ‹
+    </button>
+
+    ${pageButtons.join("")}
+
+    <button
+      type="button"
+      class="pagination-nav"
+      data-page="${currentPage + 1}"
+      ${currentPage === totalPages ? "disabled" : ""}
+      aria-label="Наступна сторінка"
+    >
+      ›
+    </button>
+
+  `;
+
+}
+
+
+pagination.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest("[data-page]");
+
+    if (!button || button.disabled) {
+      return;
+    }
+
+    currentPage =
+      Number(button.dataset.page);
+
+    renderCatalog(false);
+
+    document
+      .querySelector(".catalog-products")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+  }
+);
 
 
 /* =========================
