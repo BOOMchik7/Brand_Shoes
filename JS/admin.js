@@ -183,7 +183,6 @@ const clothingCategories = new Set([
   "Светри та кофти",
   "Куртки та вітровки",
   "Пальта та плащі",
-  "Штани",
   "Шорти",
   "Спідниці",
   "Сукні",
@@ -207,7 +206,8 @@ const footwearCategories = new Set([
 
 
 const jeansCategories = new Set([
-  "Джинси"
+  "Джинси",
+  "Штани"
 ]);
 
 
@@ -225,6 +225,14 @@ const sizeSets = {
   ],
 
   jeans: [
+    "XXS",
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "XXXL",
     "26",
     "27",
     "28",
