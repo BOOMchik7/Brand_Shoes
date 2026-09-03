@@ -62,6 +62,44 @@
       <iframe class="store-map" title="Магазин OUTFO — Львів, Рясне-1, вул. Ряснянська, 3" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2571.513996830586!2d23.962347312303734!3d49.87037337136829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473ade7789860bff%3A0x76f650bf8d644baf!2z0LLRg9C70LjRhtGPINCg0Y_RgdC90Y_QvdGB0YzQutCwLCAzLCDQm9GM0LLRltCyLCDQm9GM0LLRltCy0YHRjNC60LAg0L7QsdC70LDRgdGC0YwsIDc5MDAw!5e0!3m2!1suk!2sua!4v1787047617936!5m2!1suk!2sua" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </main>
-  <script src="../JS/script.js"></script>
+  
+<script>
+  const instagramBtn = document.getElementById("instagramBtn");
+  const instagramModal = document.getElementById("instagramModal");
+  const closeInstagram = document.getElementById("closeInstagram");
+
+  if (instagramBtn && instagramModal && closeInstagram) {
+
+    // Відкрити Instagram-вікно
+    instagramBtn.addEventListener("click", function(event) {
+      event.preventDefault();
+      instagramModal.classList.add("show");
+    });
+
+    // Закрити по хрестику
+    closeInstagram.addEventListener("click", function() {
+      instagramModal.classList.remove("show");
+    });
+
+    // Закрити при натисканні поза вікном
+    instagramModal.addEventListener("click", function(event) {
+      if (event.target === instagramModal) {
+        instagramModal.classList.remove("show");
+      }
+    });
+
+    // Закрити клавішею Escape
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        instagramModal.classList.remove("show");
+      }
+    });
+  }
+</script>
+
+<script src="../JS/script.js"></script>
+</body>
+</html>
+
 </body>
 </html>
