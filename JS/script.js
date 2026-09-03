@@ -384,3 +384,25 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 renderProducts();
 renderCart();
+
+/* =========================
+   INSTAGRAM BUTTON
+========================= */
+const instagramBtn = document.getElementById("instagramBtn");
+  const instagramModal = document.getElementById("instagramModal");
+  const closeInstagram = document.getElementById("closeInstagram");
+
+  instagramBtn.addEventListener("click", function(e) {
+    e.preventDefault();
+    instagramModal.classList.add("show");
+  });
+
+  closeInstagram.addEventListener("click", function() {
+    instagramModal.classList.remove("show");
+  });
+
+  instagramModal.addEventListener("click", function(e) {
+    if (e.target === instagramModal) {
+      instagramModal.classList.remove("show");
+    }
+  });
