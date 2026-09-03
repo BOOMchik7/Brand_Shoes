@@ -1505,3 +1505,113 @@ body.menu-open { overflow: hidden; }
 .admin-product-search input::placeholder {
   color: #999;
 }
+/* ===== Instagram Modal ===== */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+
+  width: 100%;
+  max-width: 450px;
+
+  background: #fff;
+  border-radius: 20px;
+
+  padding: 35px;
+
+  text-align: center;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+  animation: instagramModalOpen 0.25s ease;
+}
+
+.modal-close {
+  position: absolute;
+
+  top: 12px;
+  right: 16px;
+
+  width: 35px;
+  height: 35px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 32px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  color: #111;
+}
+
+.modal-close:hover {
+  opacity: 0.6;
+}
+
+.modal-content h2 {
+  margin: 5px 0 10px;
+}
+
+.modal-content > p:not(.eyebrow) {
+  margin-bottom: 25px;
+}
+
+.instagram-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instagram-pages a {
+  display: block;
+
+  padding: 15px 20px;
+
+  border-radius: 12px;
+
+  background: #f3f3f3;
+
+  color: #111;
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+.instagram-pages a:hover {
+  transform: translateY(-2px);
+  background: #e8e8e8;
+}
+
+@keyframes instagramModalOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

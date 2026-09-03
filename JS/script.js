@@ -389,20 +389,33 @@ renderCart();
    INSTAGRAM BUTTON
 ========================= */
 const instagramBtn = document.getElementById("instagramBtn");
-  const instagramModal = document.getElementById("instagramModal");
-  const closeInstagram = document.getElementById("closeInstagram");
+const instagramModal = document.getElementById("instagramModal");
+const closeInstagram = document.getElementById("closeInstagram");
 
-  instagramBtn.addEventListener("click", function(e) {
+if (instagramBtn && instagramModal && closeInstagram) {
+
+  // Відкрити вікно
+  instagramBtn.addEventListener("click", function (e) {
     e.preventDefault();
     instagramModal.classList.add("show");
   });
 
-  closeInstagram.addEventListener("click", function() {
+  // Закрити по хрестику
+  closeInstagram.addEventListener("click", function () {
     instagramModal.classList.remove("show");
   });
 
-  instagramModal.addEventListener("click", function(e) {
+  // Закрити при натисканні за межами вікна
+  instagramModal.addEventListener("click", function (e) {
     if (e.target === instagramModal) {
       instagramModal.classList.remove("show");
     }
   });
+
+  // Закрити клавішею Escape
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") {
+      instagramModal.classList.remove("show");
+    }
+  });
+}
