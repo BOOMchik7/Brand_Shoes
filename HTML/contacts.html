@@ -36,17 +36,17 @@
       </div>
     </div>
 
-    <!-- Унікальний клас ig-dialog, щоб НЕ перетинатись зі спільним .modal сайту -->
-    <dialog id="instagramModal" class="ig-dialog">
+    <!-- Нативний елемент dialog замість кастомного div-вікна -->
+    <dialog id="instagramModal" class="modal">
       <form method="dialog">
-        <button class="ig-dialog-close" aria-label="Закрити">&times;</button>
+        <button class="modal-close" aria-label="Закрити">&times;</button>
       </form>
 
       <p class="eyebrow">НАШІ СОЦМЕРЕЖІ</p>
       <h2>Instagram</h2>
       <p>Обери потрібну сторінку:</p>
 
-      <div class="ig-pages">
+      <div class="instagram-pages">
         <a href="https://www.instagram.com/outletusa.lviv_/" target="_blank" rel="noopener">
           📷 Instagram for WOMAN
         </a>
@@ -71,13 +71,14 @@
       var dialog = document.getElementById("instagramModal");
       if (!btn || !dialog) return;
 
+      // Відкрити нативне модальне вікно
       btn.addEventListener("click", function (e) {
         e.preventDefault();
         dialog.showModal();
       });
 
       // Клік по фону (backdrop) закриває вікно.
-      // Escape закриває вікно автоматично — це вбудована поведінка <dialog>.
+      // Escape закривається браузером автоматично — нічого писати не треба.
       dialog.addEventListener("click", function (e) {
         var r = dialog.getBoundingClientRect();
         var inside =
@@ -87,7 +88,5 @@
       });
     })();
   </script>
-
-  <script src="../JS/script.js"></script>
 </body>
 </html>
