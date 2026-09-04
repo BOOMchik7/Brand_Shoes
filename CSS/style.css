@@ -1505,9 +1505,12 @@ body.menu-open { overflow: hidden; }
 .admin-product-search input::placeholder {
   color: #999;
 }
-/* ===== Instagram Modal ===== */
+/* ===== Instagram Modal =====
+   Унікальні імена класів (ig-*), щоб НЕ перетинатися
+   з класом .modal, який вже використовується в іншому
+   місці сайту (кошик/картка товару). */
 
-dialog.modal {
+.ig-dialog {
   position: fixed;
   margin: auto;
 
@@ -1525,15 +1528,15 @@ dialog.modal {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-dialog.modal[open] {
+.ig-dialog[open] {
   animation: instagramModalOpen 0.25s ease;
 }
 
-dialog.modal::backdrop {
+.ig-dialog::backdrop {
   background: rgba(0, 0, 0, 0.65);
 }
 
-.modal-close {
+.ig-dialog-close {
   position: absolute;
 
   top: 12px;
@@ -1553,25 +1556,25 @@ dialog.modal::backdrop {
   color: #111;
 }
 
-.modal-close:hover {
+.ig-dialog-close:hover {
   opacity: 0.6;
 }
 
-.modal-content h2 {
+.ig-dialog h2 {
   margin: 5px 0 10px;
 }
 
-.modal-content > p:not(.eyebrow) {
+.ig-dialog > p:not(.eyebrow) {
   margin-bottom: 25px;
 }
 
-.instagram-pages {
+.ig-pages {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.instagram-pages a {
+.ig-pages a {
   display: block;
 
   padding: 15px 20px;
@@ -1589,7 +1592,7 @@ dialog.modal::backdrop {
   transition: 0.2s ease;
 }
 
-.instagram-pages a:hover {
+.ig-pages a:hover {
   transform: translateY(-2px);
   background: #e8e8e8;
 }

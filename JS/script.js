@@ -386,37 +386,6 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 renderProducts();
 renderCart();
 
-/* =========================
-   INSTAGRAM BUTTON
-========================= */
-const instagramBtn = document.getElementById("instagramBtn");
-const instagramModal = document.getElementById("instagramModal");
-const closeInstagram = document.getElementById("closeInstagram");
-
-if (instagramBtn && instagramModal && closeInstagram) {
-
-  // Відкрити вікно
-  instagramBtn.addEventListener("click", function (e) {
-    e.preventDefault();
-    instagramModal.classList.add("show");
-  });
-
-  // Закрити по хрестику
-  closeInstagram.addEventListener("click", function () {
-    instagramModal.classList.remove("show");
-  });
-
-  // Закрити при натисканні за межами вікна
-  instagramModal.addEventListener("click", function (e) {
-    if (e.target === instagramModal) {
-      instagramModal.classList.remove("show");
-    }
-  });
-
-  // Закрити клавішею Escape
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") {
-      instagramModal.classList.remove("show");
-    }
-  });
-}
+/* Instagram-вікно на сторінці Контакти тепер працює повністю
+   самостійно (див. <script> всередині HTML/contacts.html),
+   тому цей блок прибраний, щоб уникнути конфліктів. */
