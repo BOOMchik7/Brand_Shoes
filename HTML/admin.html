@@ -1,132 +1,68 @@
 <!DOCTYPE html>
 <html lang="uk">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Панель керування товарами">
-  <title>OUTFO — Адмін-панель</title>
+  <title>Контакти — OUTFO</title>
   <link rel="stylesheet" href="../CSS/style.css">
 </head>
-
-<body class="admin-page">
+<body>
   <header class="header">
     <div class="container nav">
       <a href="index.html" class="logo">OUTFO<span>.</span></a>
-      <a class="cart-btn" href="index.html">← До магазину</a>
+      <nav class="desktop-nav">
+        <a href="catalog.html">Каталог</a>
+        <a href="about.html">Про нас</a>
+        <a href="delivery.html">Доставка</a>
+        <a class="nav-active" href="contacts.html">Контакти</a>
+      </nav>
+      <a class="cart-btn" href="index.html">На головну</a>
     </div>
   </header>
+  <main class="subpage section">
+    <div class="container contact-box">
+      <div>
+        <p class="eyebrow">МАЄШ ПИТАННЯ?</p>
+        <h1>Зв’яжись з нами</h1>
+        <p>Допоможемо підібрати розмір, модель або оформити замовлення.</p>
+      </div>
+      <div class="contact-links">
+        <a href="tel:+380972711842">📞 +38 (097) 271-18-42</a>
+        <a href="tel:+380961189849">📞 +38 (096) 118-98-49</a>
+        <a href="https://maps.app.goo.gl/nvJMKJnmhRSfvZ8N7" target="_blank" rel="noopener">📍 Львів, Рясне-1, вул. Ряснянська, 3</a>
+        <a href="#" id="instagramBtn">📷 Instagram</a>
+        <a href="#">💬 Telegram</a>
+      </div>
+    </div>
+    <div id="instagramModal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" id="closeInstagram">&times;</button>
 
-  <main class="section">
-    <div class="container admin-container">
-      <section class="admin-login" id="adminLogin">
-        <p class="eyebrow">ЗАХИЩЕНИЙ ВХІД</p>
-        <h1>Адмін-панель</h1>
-        <p>Уведіть код доступу, щоб керувати товарами.</p>
-        <form id="loginForm" class="admin-form">
-          <label>Код доступу<input id="adminCode" type="password" required autocomplete="current-password"></label>
-          <button class="primary-btn full" type="submit">Увійти</button>
-          <p class="form-error hidden" id="loginError">Неправильний код доступу.</p>
-        </form>
-      </section>
+    <p class="eyebrow">НАШІ СОЦМЕРЕЖІ</p>
+    <h2>Instagram</h2>
+    <p>Обери потрібну сторінку:</p>
 
-      <section class="admin-dashboard hidden" id="adminDashboard">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">КЕРУВАННЯ МАГАЗИНОМ</p>
-            <h1>Товари</h1>
-          </div>
-          <button class="reset-filters" id="logoutBtn" type="button">Вийти</button>
-        </div>
-        <div class="admin-grid">
-          <form id="adminProductForm" class="admin-form admin-product-form">
-            <h3>Новий товар</h3>
-            <label>Назва товару<input id="adminName" type="text" required></label>
-            <div class="admin-form-row">
-              <label>Категорія<select id="adminCategory">
-                  <optgroup label="Одяг">
-                    <option value="Футболки">Футболки</option>
-                    <option value="Комплекти">Комплекти</option>
-                    <option value="Сорочки">Сорочки</option>
-                    <option value="Гольфи">Гольфи</option>
-                    <option value="Світшоти та худі">Світшоти та худі</option>
-                    <option value="Светри та кофти">Светри та кофти</option>
-                    <option value="Куртки та вітровки">Куртки та вітровки</option>
-                    <option value="Пальта та плащі">Пальта та плащі</option>
-                    <option value="Джинси">Джинси</option>
-                    <option value="Штани">Штани</option>
-                    <option value="Шорти">Шорти</option>
-                    <option value="Спідниці">Спідниці</option>
-                    <option value="Сукні">Сукні</option>
-                    <option value="Комбінезони">Комбінезони</option>
-                    <option value="Жилетки">Жилетки</option>
-                    <option value="Спортивний одяг">Спортивний одяг</option>
-                    <option value="Нижня білизна">Нижня білизна</option>
-                    <option value="Домашній одяг">Домашній одяг</option>
-                    <option value="Купальники">Купальники</option>
-                  </optgroup>
-                  <optgroup label="Взуття">
-                    <option value="Кросівки">Кросівки</option>
-                    <option value="Кеди">Кеди</option>
-                    <option value="Черевики та чоботи">Черевики та чоботи</option>
-                    <option value="Туфлі та лофери">Туфлі та лофери</option>
-                    <option value="Сандалі та босоніжки">Сандалі та босоніжки</option>
-                    <option value="Шльопанці та капці">Шльопанці та капці</option>
-                  </optgroup>
-                  <optgroup label="Аксесуари">
-                    <option value="Сумки та рюкзаки">Сумки та рюкзаки</option>
-                    <option value="Гаманці">Гаманці</option>
-                    <option value="Ремені">Ремені</option>
-                    <option value="Головні убори">Головні убори</option>
-                    <option value="Шарфи та рукавички">Шарфи та рукавички</option>
-                    <option value="Шкарпетки">Шкарпетки</option>
-                    <option value="Окуляри">Окуляри</option>
-                    <option value="Прикраси">Прикраси</option>
-                    <option value="Годинники">Годинники</option>
-                  </optgroup>
-                </select></label>
-              <label>Для кого<select id="adminGender">
-                  <option value="female">Жіноче</option>
-                  <option value="male">Чоловіче</option>
-                  <option value="unisex">Унісекс</option>
-                </select></label>
-              <label>Сезон<select id="adminSeason">
-                  <option value="summer">Літній</option>
-                  <option value="demi">Демісезонний</option>
-                  <option value="winter">Зимовий</option>
-                  <option value="all-season">Всесезонний</option>
-                </select></label>
-            </div>
-            <label>Ціна, грн<input id="adminPrice" type="number" min="0" required></label>
-            <div id="sizeStockPanel" class="admin-form-row" style="flex-direction: column;"></div>
-            <label>Фото товару<input id="adminPhoto" type="file" accept="image/*" multiple></label>
-            <img id="photoPreview" class="photo-preview hidden" alt="Попередній перегляд фото">
+    <div class="instagram-pages">
+      <a href="https://www.instagram.com/outletusa.lviv_/" target="_blank" rel="noopener">
+        📷 Instagram for WOMAN
+      </a>
 
-            <label>Опис товару<textarea id="adminDescription" rows="4" required
-                placeholder="Напишіть короткий опис товару"></textarea></label>
-            <button class="primary-btn full" type="submit">Додати товар</button>
-            <button class="reset-filters full hidden" id="cancelEditBtn" type="button" onclick="cancelEdit()">Скасувати редагування</button>
-          </form>
-          <div class="admin-products-panel">
+      <a href="https://www.instagram.com/outletusa.lviv_men_/" target="_blank" rel="noopener">
+        📷 Instagram for MAN
+      </a>
 
-            <div class="admin-products-header">
-              <h3 class="admin-list-title">Додані товари</h3>
-              <span id="adminProductCount">0 товарів</span>
-            </div>
-
-            <div class="admin-product-search">
-              <input type="search" id="adminProductSearch" placeholder="🔎 Пошук товару за назвою..."
-                autocomplete="off">
-            </div>
-
-            <div class="admin-product-list" id="adminProductList"></div>
-
-          </div>
-        </div>
-      </section>
+      <a href="https://www.instagram.com/brandshoes_lviv/" target="_blank" rel="noopener">
+        📷 Instagram for ALL
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="container map-section">
+      <h2>Як нас знайти</h2>
+      <iframe class="store-map" title="Магазин OUTFO — Львів, Рясне-1, вул. Ряснянська, 3" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2571.513996830586!2d23.962347312303734!3d49.87037337136829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473ade7789860bff%3A0x76f650bf8d644baf!2z0LLRg9C70LjRhtGPINCg0Y_RgdC90Y_QvdGB0YzQutCwLCAzLCDQm9GM0LLRltCyLCDQm9GM0LLRltCy0YHRjNC60LAg0L7QsdC70LDRgdGC0YwsIDc5MDAw!5e0!3m2!1suk!2sua!4v1787047617936!5m2!1suk!2sua" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </main>
-  <script type="module" src="../JS/admin.js"></script>
-</body>
 
+<script src="../JS/script.js"></script>
+</body>
 </html>
