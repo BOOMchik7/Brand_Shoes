@@ -4,6 +4,7 @@ import {
   collection,
   getDocs,
   addDoc,
+  updateDoc,
   deleteDoc,
   doc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -55,6 +56,7 @@ const UPLOAD_PRESET = "my-shop";
 
 let selectedPhotos = [];
 let activePhotoIndex = 0;
+let editingProductId = null;
 
 adminPhoto.multiple = true;
 adminPhoto.accept = "image/*";
@@ -573,6 +575,17 @@ async function addProduct(product) {
     throw error;
   }
 }
+async function updateProduct(id, product) {
+  try {
+    await updateDoc(
+      doc(db, "products", id),
+      product
+    );
+  } catch (error) {
+    console.error("Помилка оновлення товару:", error);
+    throw error;
+  }
+}
 
 
 /* =========================
@@ -761,15 +774,26 @@ function renderAdminProductList() {
 
         </div>
 
-        <button
-          class="remove-item"
-          type="button"
-          onclick="deleteProduct('${product.id}')"
-          aria-label="Видалити товар"
-          title="Видалити товар"
-        >
-          ×
-        </button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button
+            class="reset-filters"
+            type="button"
+            onclick="editProduct('${product.id}')"
+            title="Редагувати товар"
+          >
+            Редагувати
+          </button>
+
+          <button
+            class="remove-item"
+            type="button"
+            onclick="deleteProduct('${product.id}')"
+            aria-label="Видалити товар"
+            title="Видалити товар"
+          >
+            ×
+          </button>
+        </div>
 
       </article>
 
@@ -962,6 +986,94 @@ adminPhoto.addEventListener(
 
 
 /* =========================
+   EDIT PRODUCT
+========================= */
+
+window.editProduct = function (id) {
+
+  const product = allAdminProducts.find(item => item.id === id);
+
+  if (!product) {
+    alert("Товар не знайдено.");
+    return;
+  }
+
+  editingProductId = id;
+
+  document.getElementById("adminName").value = product.name || "";
+  categorySelect.value = product.category || "";
+  document.getElementById("adminGender").value = product.gender || "unisex";
+  document.getElementById("adminPrice").value = product.price ?? "";
+  document.getElementById("adminDescription").value = product.description || "";
+
+  // У Firestore сезон зберігається як текст, тому знаходимо відповідний option.
+  const seasonOption = [...document.getElementById("adminSeason").options]
+    .find(option => option.textContent === product.season || option.value === product.season);
+
+  if (seasonOption) {
+    document.getElementById("adminSeason").value = seasonOption.value;
+  }
+
+  // Повертаємо всі вибрані розміри та їх залишки.
+  renderSizeOptions();
+
+  const productSizes = product.sizes || Object.keys(product.sizeStock || {});
+  document.querySelectorAll('input[name="productSize"]').forEach(checkbox => {
+    checkbox.checked = productSizes.includes(checkbox.value);
+  });
+
+  renderSizeStockPanel();
+
+  document.querySelectorAll(".size-stock-input").forEach(input => {
+    if (Object.prototype.hasOwnProperty.call(product.sizeStock || {}, input.dataset.size)) {
+      input.value = product.sizeStock[input.dataset.size];
+    }
+  });
+
+  // Старі фото залишаються. Нові фото, вибрані нижче, додадуться до них.
+  selectedPhotos = [...(product.photos || [])];
+  if (!selectedPhotos.length && product.image) {
+    selectedPhotos = [product.image];
+  }
+  activePhotoIndex = 0;
+  renderPhotoPreviews();
+
+  const formTitle = adminForm.querySelector("h3");
+  if (formTitle) formTitle.textContent = "Редагування товару";
+
+  const submitButton = adminForm.querySelector('button[type="submit"]');
+  if (submitButton) submitButton.textContent = "Зберегти зміни";
+
+  const cancelButton = document.getElementById("cancelEditBtn");
+  if (cancelButton) cancelButton.classList.remove("hidden");
+
+  adminForm.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
+function cancelEdit() {
+  editingProductId = null;
+  adminForm.reset();
+  selectedPhotos = [];
+  activePhotoIndex = 0;
+
+  renderPhotoPreviews();
+  renderSizeOptions();
+  renderSizeStockPanel();
+
+  const formTitle = adminForm.querySelector("h3");
+  if (formTitle) formTitle.textContent = "Новий товар";
+
+  const submitButton = adminForm.querySelector('button[type="submit"]');
+  if (submitButton) submitButton.textContent = "Додати товар";
+
+  const cancelButton = document.getElementById("cancelEditBtn");
+  if (cancelButton) cancelButton.classList.add("hidden");
+}
+
+window.cancelEdit = cancelEdit;
+
+
+/* =========================
    ADD PRODUCT FORM
 ========================= */
 
@@ -1062,7 +1174,9 @@ adminForm.addEventListener(
         selectedPhotos,
 
       badge:
-        "Новинка",
+        editingProductId
+          ? (allAdminProducts.find(item => item.id === editingProductId)?.badge || "Новинка")
+          : "Новинка",
 
       description:
         document
@@ -1073,8 +1187,9 @@ adminForm.addEventListener(
       isCustom:
         true,
 
-      createdAt:
-        new Date().toISOString()
+      ...(editingProductId
+        ? {}
+        : { createdAt: new Date().toISOString() })
 
     };
 
@@ -1097,26 +1212,15 @@ adminForm.addEventListener(
       }
 
 
-      await addProduct(product);
+      if (editingProductId) {
+        await updateProduct(editingProductId, product);
+        alert("Товар успішно оновлено!");
+      } else {
+        await addProduct(product);
+        alert("Товар успішно додано!");
+      }
 
-
-      alert(
-        "Товар успішно додано!"
-      );
-
-
-      adminForm.reset();
-
-      selectedPhotos = [];
-
-      activePhotoIndex = 0;
-
-      renderPhotoPreviews();
-
-      renderSizeOptions();
-
-      renderSizeStockPanel();
-
+      cancelEdit();
       await renderProducts();
 
 
