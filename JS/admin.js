@@ -213,6 +213,11 @@ const jeansCategories = new Set([
 ]);
 
 
+const bagCategories = new Set([
+  "Сумки та рюкзаки"
+]);
+
+
 const sizeSets = {
 
   clothing: [
@@ -384,6 +389,19 @@ const sizeSets = {
 
   accessory: [
     "One size"
+  ],
+
+  // Розміри сумок/рюкзаків у форматі Ширина/Висота/Глибина, см
+  bags: [
+    "18/12/7",   // міні-сумка
+    "23/14/9",   // маленька кросбоді
+    "27/18/10",  // сумка через плече
+    "30/20/12",  // класична сумка-хендбег
+    "33/23/13",  // сумка-тоут середня
+    "35/25/15",  // сумка-тоут велика
+    "40/30/18",  // рюкзак/шопер
+    "45/32/20",  // рюкзак великий
+    "50/35/22"   // дорожня сумка
   ]
 
 };
@@ -403,6 +421,10 @@ function getSizesForCategory() {
 
   if (footwearCategories.has(category)) {
     return sizeSets.footwear;
+  }
+
+  if (bagCategories.has(category)) {
+    return sizeSets.bags;
   }
 
   return sizeSets.accessory;
