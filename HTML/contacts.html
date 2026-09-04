@@ -63,39 +63,7 @@
     </div>
   </main>
   
-<script>
-  const instagramBtn = document.getElementById("instagramBtn");
-  const instagramModal = document.getElementById("instagramModal");
-  const closeInstagram = document.getElementById("closeInstagram");
 
-  if (instagramBtn && instagramModal && closeInstagram) {
-
-    // Відкрити Instagram-вікно
-    instagramBtn.addEventListener("click", function(event) {
-      event.preventDefault();
-      instagramModal.classList.add("show");
-    });
-
-    // Закрити по хрестику
-    closeInstagram.addEventListener("click", function() {
-      instagramModal.classList.remove("show");
-    });
-
-    // Закрити при натисканні поза вікном
-    instagramModal.addEventListener("click", function(event) {
-      if (event.target === instagramModal) {
-        instagramModal.classList.remove("show");
-      }
-    });
-
-    // Закрити клавішею Escape
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        instagramModal.classList.remove("show");
-      }
-    });
-  }
-</script>
 
 <script src="../JS/script.js"></script>
 </body>
