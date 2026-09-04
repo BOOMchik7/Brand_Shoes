@@ -1507,31 +1507,15 @@ body.menu-open { overflow: hidden; }
 }
 /* ===== Instagram Modal ===== */
 
-.modal {
-  display: none;
+dialog.modal {
   position: fixed;
-  inset: 0;
-  z-index: 9999;
-
-  background: rgba(0, 0, 0, 0.65);
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  position: relative;
+  margin: auto;
 
   width: 100%;
   max-width: 450px;
 
   background: #fff;
+  border: none;
   border-radius: 20px;
 
   padding: 35px;
@@ -1539,8 +1523,14 @@ body.menu-open { overflow: hidden; }
   text-align: center;
 
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
 
+dialog.modal[open] {
   animation: instagramModalOpen 0.25s ease;
+}
+
+dialog.modal::backdrop {
+  background: rgba(0, 0, 0, 0.65);
 }
 
 .modal-close {
