@@ -166,46 +166,154 @@ function removeFromCart(id) {
 }
 
 function renderCart() {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartCount.textContent = totalItems;
 
-  if (cart.length === 0) {
+  const cartItems =
+    document.getElementById("cartItems");
+
+  // Видаляємо з кошика товари,
+  // яких більше немає у Firebase
+  cart = cart.filter(item => {
+    return products.some(
+      product =>
+        String(product.id) === String(item.id)
+    );
+  });
+
+  // Видаляємо некоректні позиції
+  cart = cart.filter(item => {
+    return Number(item.quantity) > 0;
+  });
+
+  saveCart();
+
+  // Рахуємо кількість тільки реальних товарів
+  const totalItems =
+    cart.reduce(
+      (total, item) =>
+        total + Number(item.quantity),
+      0
+    );
+
+  document.getElementById("cartCount").textContent =
+    totalItems;
+
+
+  if (!cart.length) {
+
     cartItems.innerHTML = `
       <div class="cart-empty">
-        <div style="font-size:48px;margin-bottom:15px">🛒</div>
-        <h3>Кошик порожній</h3>
-        <p>Додайте товари з каталогу.</p>
+
+        <div
+          style="
+            font-size:48px;
+            margin-bottom:15px
+          "
+        >
+          🛒
+        </div>
+
+        <h3>
+          Кошик порожній
+        </h3>
+
+        <p>
+          Додайте товари з каталогу.
+        </p>
+
       </div>
     `;
-    cartTotal.textContent = "0 грн";
+
+    document.getElementById("cartTotal").textContent =
+      "0 грн";
+
     return;
   }
 
+
   let total = 0;
 
-  cartItems.innerHTML = cart.map(item => {
-    const product = products.find(p => p.id === item.id);
-    const itemTotal = product.price * item.quantity;
-    total += itemTotal;
+  cartItems.innerHTML =
+    cart.map(item => {
 
-    return `
-      <div class="cart-item">
-        <div class="cart-item-image">${product.emoji}</div>
-        <div>
-          <h4>${product.name}</h4>
-          <div class="cart-item-price">${formatPrice(product.price)}</div>
-          <div class="quantity">
-            <button onclick="changeQuantity(${product.id}, -1)">−</button>
-            <strong>${item.quantity}</strong>
-            <button onclick="changeQuantity(${product.id}, 1)">+</button>
+      const product =
+        products.find(
+          product =>
+            String(product.id) ===
+            String(item.id)
+        );
+
+      if (!product) return "";
+
+      total +=
+        Number(product.price) *
+        Number(item.quantity);
+
+      const sizeInfo =
+        item.size
+          ? ` (розмір: ${item.size})`
+          : "";
+
+      return `
+        <div class="cart-item">
+
+          <div class="cart-item-image">
+
+            ${
+              product.image
+                ? `<img src="${product.image}" alt="">`
+                : product.emoji || "🛍️"
+            }
+
           </div>
-        </div>
-        <button class="remove-item" onclick="removeFromCart(${product.id})" aria-label="Видалити">×</button>
-      </div>
-    `;
-  }).join("");
 
-  cartTotal.textContent = formatPrice(total);
+          <div>
+
+            <h4>
+              ${product.name}${sizeInfo}
+            </h4>
+
+            <div class="cart-item-price">
+              ${formatPrice(product.price)}
+            </div>
+
+            <div class="quantity">
+
+              <button
+                onclick="changeQuantity('${item.cartKey || item.id}', -1)"
+              >
+                −
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                onclick="changeQuantity('${item.cartKey || item.id}', 1)"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+          <button
+            class="remove-item"
+            onclick="removeFromCart('${item.cartKey || item.id}')"
+            aria-label="Видалити"
+          >
+            ×
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+
+  document.getElementById("cartTotal").textContent =
+    formatPrice(total);
 }
 
 function openCart() {
